@@ -10,5 +10,6 @@ public class PlayerVerticalFollower : MonoBehaviour
     private void Update()
     {
         transform.position = new Vector3(transform.position.x, playerRef.transform.position.y, transform.position.x);
+        transform.LookAt(playerRef.transform.position, Vector3.up);
     }
 }

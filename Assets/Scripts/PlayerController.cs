@@ -4,89 +4,74 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private CharacterController characterController;
-    private Camera _camera;
-    [Header("SETTINGS")]
-    public float movementSpeed = 10f;
-    public float rotationSpeed = 10f;
-    public float jumpForce = 10f;
-    public float maxStamina = 10f;
-    public float staminaBurnRate = 10f;
-    public float staminaRechargeRate = 20f;
-
-    [Space]
-    public float stamina = 0f;
-    public bool IsGrounded = false;
-    private bool isStaminaRecharging = false;
-    private float verticalVelocity = 0.005f;
-    private float fallTimer = 0f;
+    private Rigidbody _body;
+    public float forceAmount = 10f;
+    public float rotationAmount = 10f;
+    public float rotationDamper = 0.5f;
+    public Transform upPivot;
 
 
-    public Animator characterAnimator;
+    private bool movementOverride = false;
+    private float movementDuration = 3f;
+    private float movementTimer = 0f;
 
-    public bool IsStaminaRecharging
-    {
-        get => isStaminaRecharging; set
-        {
-            isStaminaRecharging = value;
-        }
-    }
+    private Vector3 startMovePos;
+    private Vector3 endMovePos;
 
+
+    public WingPairController[] wings;
     private void Start()
     {
-        _camera = Camera.main;
-        characterController = GetComponent<CharacterController>();
+        _body = GetComponent<Rigidbody>();
     }
 
     private void Update()
     {
-
-        Vector3 move = _camera.transform.rotation * new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
-        move = Vector3.Scale(move, new Vector3(1, 0, 1));
-
-        if (IsGrounded) fallTimer = 0f;
-        else fallTimer += Time.deltaTime;
-
-        verticalVelocity = IsGrounded ? -1f : Physics.gravity.y * Mathf.Sqrt(fallTimer);
-
-        if (Input.GetKey(KeyCode.Space) && !IsStaminaRecharging)
+        if (movementOverride)
         {
-            fallTimer = 0f;
-            fallTimer += Time.deltaTime;
-
-            verticalVelocity = jumpForce * Mathf.Sqrt(fallTimer) - Physics.gravity.y * Mathf.Sqrt(fallTimer);
-
-            stamina -= staminaBurnRate * Time.deltaTime;
-            if (stamina <= 0)
+            transform.position = Vector3.Lerp(startMovePos, endMovePos, movementTimer / movementDuration);
+            movementTimer += Time.deltaTime;
+            if (movementTimer >= movementDuration)
             {
-                IsStaminaRecharging = true;
+                movementTimer = 0f;
+                movementOverride = false;
             }
-
+            return;
         }
-        else
+
+        if (Input.GetKeyDown(KeyCode.A))
         {
-            stamina = stamina += staminaBurnRate * Time.deltaTime;
-            if (stamina >= maxStamina)
-            {
-                stamina = maxStamina;
-                IsStaminaRecharging = false;
-            }
-
+            RotatePivot(true);
+            _body.AddForce(upPivot.up * forceAmount, ForceMode.Impulse);
+            wings[1].Flap();
         }
-
-        if (move.magnitude >= 0.1f)
+        else if (Input.GetKeyDown(KeyCode.D))
         {
-            characterController.Move(move.normalized * movementSpeed * Time.deltaTime + Vector3.up * verticalVelocity * Time.deltaTime);
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(move, Vector3.up), rotationSpeed * Time.deltaTime);
-        }
-        else
-        {
-            characterController.Move(Vector3.up * verticalVelocity * Time.deltaTime);
+            RotatePivot(false);
+            _body.AddForce(upPivot.up * forceAmount, ForceMode.Impulse);
+            wings[0].Flap();
         }
 
 
-        IsGrounded = characterController.isGrounded;
+        upPivot.rotation = Quaternion.Lerp(upPivot.rotation, Quaternion.identity, rotationDamper * Time.deltaTime);
 
-        characterAnimator.SetBool("IsFalling", (isStaminaRecharging && !IsGrounded));
+
+
+    }
+
+    public void RotatePivot(bool isLeft)
+    {
+        upPivot.Rotate(Vector3.forward, isLeft ? -rotationAmount : rotationAmount, Space.Self);
+    }
+
+
+    public void ForceMoveTo(Transform targetPoint)
+    {
+        if (movementOverride) return;
+
+        startMovePos = transform.position;
+        endMovePos = targetPoint.position;
+        movementTimer = 0f;
+        movementOverride = true;
     }
 }

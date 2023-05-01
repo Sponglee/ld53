@@ -15,6 +15,7 @@ public class FinishController : MonoBehaviour
             other.gameObject.GetComponent<PlayerController>().staminaController.DeInitializeStamina();
             other.gameObject.GetComponent<PlayerController>().ForceMoveTo(finishPoint, 3f);
             CameraManager.Instance.SetLive("finishCam");
+            GameManager.Instance.StopTimer();
             DOVirtual.DelayedCall(3f, () =>
             {
                 GameManager.Instance.LevelComplete();

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class StaminaController : MonoBehaviour
@@ -47,6 +48,8 @@ public class StaminaController : MonoBehaviour
         {
             Stamina = maxStamina;
             IsStaminaRecharging = false;
+            onStaminaFinishedCallback?.Invoke();
+            onStaminaFinishedCallback = null;
         }
         if (Stamina <= 0)
         {
@@ -54,10 +57,14 @@ public class StaminaController : MonoBehaviour
         }
     }
 
-    public void InitializeStamina()
+    private Action onStaminaFinishedCallback;
+
+    public void InitializeStamina(Action aCallback)
     {
         _isInitialized = true;
         staminaUI.gameObject.SetActive(true);
+
+        onStaminaFinishedCallback = aCallback;
     }
 
     public void DeInitializeStamina()

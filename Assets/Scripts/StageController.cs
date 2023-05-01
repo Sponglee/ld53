@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StageController : MonoBehaviour
+public class StageController : Singleton<StageController>
 {
     public GameObject[] levels;
     public Transform levelHolder;

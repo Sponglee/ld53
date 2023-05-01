@@ -10,11 +10,13 @@ public class MenuPhone : Singleton<MenuPhone>
     public Transform screensHolder;
     public Button startButton;
     public Button deliveredButton;
+    public Button redoButton;
 
     private void Start()
     {
         startButton.onClick.AddListener(StartHandler);
         deliveredButton.onClick.AddListener(DeliveredHandler);
+        redoButton.onClick.AddListener(RedoHandler);
     }
 
 
@@ -28,6 +30,7 @@ public class MenuPhone : Singleton<MenuPhone>
         for (int i = 0; i < screensHolder.childCount; i++)
         {
             screensHolder.GetChild(i).gameObject.SetActive(i == index);
+            screensHolder.GetChild(i).GetComponent<IScreen>().UpdateScreen();
         }
     }
 
@@ -44,5 +47,16 @@ public class MenuPhone : Singleton<MenuPhone>
         CameraManager.Instance.SetLive("olympusCam");
         DOVirtual.DelayedCall(2f, () =>
         GameManager.Instance.RestartLevel());
+    }
+
+    public void RedoHandler()
+    {
+        TogglePhone(false);
+        CameraManager.Instance.SetLive("olympusCam");
+        DOVirtual.DelayedCall(2f, () =>
+        {
+            GameManager.Instance.DecreaseLevelIndex();
+            GameManager.Instance.RestartLevel();
+        });
     }
 }

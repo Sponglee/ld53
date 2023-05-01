@@ -17,7 +17,7 @@ public class ThunderCloud : MonoBehaviour
     {
         transform.position = new Vector3(moveLimits.y, transform.position.y, transform.position.z);
 
-        DOTween.Sequence().SetDelay(1f).Append(transform.DOMove(new Vector3(moveLimits.x, transform.position.y, transform.position.z), moveDuration)
+        DOTween.Sequence().Append(transform.DOMove(new Vector3(moveLimits.x, transform.position.y, transform.position.z), moveDuration)
         .OnComplete(() =>
         {
             transform.DOMove(new Vector3(moveLimits.x, transform.position.y, transform.position.z), moveDuration);

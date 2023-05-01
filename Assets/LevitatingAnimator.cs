@@ -14,8 +14,11 @@ public class LevitatingAnimator : MonoBehaviour
     private bool reverse = false;
     void Update()
     {
-        if (playerController.IsGrounded) return;
-
+        if (playerController.IsGrounded)
+        {
+            transform.localPosition = new Vector3(transform.localPosition.x, verticalOffset.y, transform.localPosition.z);
+            return;
+        }
         transform.localPosition = Vector3.Lerp(new Vector3(transform.localPosition.x, verticalOffset.x, transform.localPosition.z),
                                                 new Vector3(transform.localPosition.x, verticalOffset.y, transform.localPosition.z), timer / period);
 

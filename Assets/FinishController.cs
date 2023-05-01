@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class FinishController : MonoBehaviour
@@ -11,6 +12,7 @@ public class FinishController : MonoBehaviour
         {
             other.gameObject.GetComponent<PlayerController>().ForceMoveTo(finishPoint, 3f);
             CameraManager.Instance.SetLive("finishCam");
+            DOVirtual.DelayedCall(3f, () => GameManager.Instance.LevelComplete());
         }
     }
 }

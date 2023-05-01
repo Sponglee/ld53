@@ -14,6 +14,8 @@ public class StaminaController : MonoBehaviour
 
     public StaminaUI staminaUI;
 
+    private bool _isInitialized = false;
+
     public float Stamina
     {
         get => stamina;
@@ -32,8 +34,35 @@ public class StaminaController : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        staminaUI.gameObject.SetActive(false);
+    }
+
+    private void Update()
+    {
+        if (!_isInitialized) return;
+
+        if (Stamina >= maxStamina)
+        {
+            Stamina = maxStamina;
+            IsStaminaRecharging = false;
+        }
+        if (Stamina <= 0)
+        {
+            IsStaminaRecharging = true;
+        }
+    }
+
+    public void InitializeStamina()
+    {
+        _isInitialized = true;
+        staminaUI.gameObject.SetActive(true);
+    }
+
     public void SpendStamina()
     {
+        if (!_isInitialized) return;
         Stamina -= staminaBurnRate * Time.deltaTime;
         if (Stamina <= 0)
         {
@@ -42,6 +71,7 @@ public class StaminaController : MonoBehaviour
     }
     public void SpendStamina(float aSpendAmount)
     {
+        if (!_isInitialized) return;
         Stamina -= aSpendAmount;
         if (Stamina <= 0)
         {
@@ -51,21 +81,14 @@ public class StaminaController : MonoBehaviour
 
     public void RechargeStamina()
     {
+        if (!_isInitialized) return;
         Stamina += staminaBurnRate * Time.deltaTime;
-        if (Stamina >= maxStamina)
-        {
-            Stamina = maxStamina;
-            IsStaminaRecharging = false;
-        }
+
     }
 
     public void RechargeStamina(float aRechargeAmount)
     {
+        if (!_isInitialized) return;
         Stamina += aRechargeAmount;
-        if (Stamina >= maxStamina)
-        {
-            Stamina = maxStamina;
-            IsStaminaRecharging = false;
-        }
     }
 }

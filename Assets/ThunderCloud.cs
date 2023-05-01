@@ -13,6 +13,8 @@ public class ThunderCloud : MonoBehaviour
     Tween tmpForward;
     Tween tmpBackward;
 
+    public Transform modelHolder;
+
     private void Start()
     {
         transform.position = new Vector3(moveLimits.y, transform.position.y, transform.position.z);
@@ -32,6 +34,12 @@ public class ThunderCloud : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             other.GetComponent<PlayerController>().Drop();
+            DOTween.Sequence().Append(modelHolder.DOScale(Vector3.one * 1.5f, 0.1f)
+                 .OnComplete(() =>
+                 {
+                     modelHolder.DOScale(Vector3.one, 0.25f);
+                 }))
+                 .Play();
         }
     }
 }

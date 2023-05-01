@@ -5,9 +5,9 @@ using UnityEngine;
 public class PlayerAnimator : MonoBehaviour
 {
     public Animator animator;
-    public void PlayFlyingAnim(bool aToggle)
+    public void PlayReactAnim()
     {
-
+        animator.SetTrigger("React");
     }
     public void PlayFallingAnim(bool aToggle)
     {
@@ -17,4 +17,14 @@ public class PlayerAnimator : MonoBehaviour
     {
         animator.SetBool("IsGrounded", aToggle);
     }
+    public void JumpAnim()
+    {
+        animator.SetTrigger("Jump");
+    }
+
+    public void PlayLevitatingAnim(bool aToggle)
+    {
+        animator.SetBool("IsLevitating", aToggle);
+    }
+
 }

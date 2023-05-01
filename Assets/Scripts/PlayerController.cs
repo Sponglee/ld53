@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
     {
         _body = GetComponent<Rigidbody>();
         _body.drag = dragLimits.x;
+        playerAnimator.PlayGroundedAnim(true);
     }
 
     private void Update()
@@ -63,20 +64,22 @@ public class PlayerController : MonoBehaviour
             if (staminaController.IsStaminaRecharging)
             {
                 _body.drag = dragLimits.x;
+                playerAnimator.PlayLevitatingAnim(false);
                 return;
             }
             else
             {
                 _body.drag = dragLimits.y;
                 staminaController.SpendStamina();
+                playerAnimator.PlayLevitatingAnim(true);
+
             }
-        }
-        else if (Input.GetKeyUp(KeyCode.Space))
-        {
-            _body.drag = dragLimits.x;
+
         }
         else
         {
+            playerAnimator.PlayLevitatingAnim(false);
+            _body.drag = dragLimits.x;
             staminaController.RechargeStamina();
         }
 
@@ -97,11 +100,14 @@ public class PlayerController : MonoBehaviour
 
     public void Jump(float aForce)
     {
+        playerAnimator.JumpAnim();
         _body.AddForce(upPivot.up * aForce, ForceMode.Impulse);
     }
 
     public void Drop()
     {
+        staminaController.SpendStamina(3f);
+        playerAnimator.PlayReactAnim();
         _body.velocity = Vector3.zero;
     }
 
@@ -129,7 +135,9 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        IsGrounded = true;
+        Debug.Log(other.gameObject.name);
+        if (other.transform.CompareTag("Ground"))
+            IsGrounded = true;
     }
 
     private void OnCollisionExit(Collision other)

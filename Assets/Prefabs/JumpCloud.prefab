@@ -131,7 +131,7 @@ MonoBehaviour:
   modelHolder: {fileID: 6906861814328832747}
   bouncePoint: {fileID: 4215547445176763214}
   boucneInDuration: 0.25
-  bounceIn: {x: 1, y: 0.8, z: 1}
+  bounceIn: {x: 1.5, y: 0.8, z: 1.5}
   bounceOutDuration: 0.25
   bounceOut: {x: 1, y: 1.5, z: 1}
 --- !u!136 &10011266

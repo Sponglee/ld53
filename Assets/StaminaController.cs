@@ -22,7 +22,7 @@ public class StaminaController : MonoBehaviour
         set
         {
             stamina = value;
-            staminaUI.UpdareSliderValue(stamina / maxStamina);
+            staminaUI.UpdareSliderValue(stamina / maxStamina, isStaminaRecharging);
         }
     }
 
@@ -58,6 +58,12 @@ public class StaminaController : MonoBehaviour
     {
         _isInitialized = true;
         staminaUI.gameObject.SetActive(true);
+    }
+
+    public void DeInitializeStamina()
+    {
+        _isInitialized = false;
+        staminaUI.gameObject.SetActive(false);
     }
 
     public void SpendStamina()

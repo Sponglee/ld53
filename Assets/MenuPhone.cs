@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,6 +41,8 @@ public class MenuPhone : Singleton<MenuPhone>
     public void DeliveredHandler()
     {
         TogglePhone(false);
-        GameManager.Instance.RestartLevel();
+        CameraManager.Instance.SetLive("olympusCam");
+        DOVirtual.DelayedCall(2f, () =>
+        GameManager.Instance.RestartLevel());
     }
 }

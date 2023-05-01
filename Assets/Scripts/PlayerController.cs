@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     public float rotationDamper = 0.5f;
     public Vector2 dragLimits;
     public Transform upPivot;
-
+    public PlayerAnimator playerAnimator;
     public StaminaController staminaController;
     public WingPairController[] wings;
 
@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 startMovePos;
     private Vector3 endMovePos;
 
+    public bool IsGrounded = false;
     private void Start()
     {
         _body = GetComponent<Rigidbody>();
@@ -79,6 +80,8 @@ public class PlayerController : MonoBehaviour
             staminaController.RechargeStamina();
         }
 
+        playerAnimator.PlayFallingAnim(staminaController.IsStaminaRecharging);
+        playerAnimator.PlayGroundedAnim(IsGrounded);
         upPivot.rotation = Quaternion.Lerp(upPivot.rotation, Quaternion.identity, rotationDamper * Time.deltaTime);
     }
 
@@ -122,5 +125,15 @@ public class PlayerController : MonoBehaviour
         movementDuration = aDuration;
         movementTimer = 0f;
         movementOverride = true;
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        IsGrounded = true;
+    }
+
+    private void OnCollisionExit(Collision other)
+    {
+        IsGrounded = false;
     }
 }

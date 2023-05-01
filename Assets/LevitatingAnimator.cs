@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class LevitatingAnimator : MonoBehaviour
 {
+    public PlayerController playerController;
+
     public float period;
     public Vector2 verticalOffset;
 
@@ -12,6 +14,8 @@ public class LevitatingAnimator : MonoBehaviour
     private bool reverse = false;
     void Update()
     {
+        if (playerController.IsGrounded) return;
+
         transform.localPosition = Vector3.Lerp(new Vector3(transform.localPosition.x, verticalOffset.x, transform.localPosition.z),
                                                 new Vector3(transform.localPosition.x, verticalOffset.y, transform.localPosition.z), timer / period);
 

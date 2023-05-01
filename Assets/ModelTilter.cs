@@ -10,6 +10,8 @@ public class ModelTilter : MonoBehaviour
 
     void Update()
     {
+        if (playerController.IsGrounded) return;
+
         transform.rotation = Quaternion.Lerp(transform.rotation, playerController.upPivot.rotation, dampeningValue);
     }
 }

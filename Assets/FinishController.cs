@@ -9,7 +9,7 @@ public class FinishController : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            other.gameObject.GetComponent<PlayerController>().ForceMoveTo(finishPoint);
+            other.gameObject.GetComponent<PlayerController>().ForceMoveTo(finishPoint, 3f);
             CameraManager.Instance.SetLive("finishCam");
         }
     }

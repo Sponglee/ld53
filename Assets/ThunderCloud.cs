@@ -25,4 +25,13 @@ public class ThunderCloud : MonoBehaviour
         .AppendInterval(waitDuration).SetLoops(-1, LoopType.Yoyo).Play();
 
     }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            other.GetComponent<PlayerController>().Drop();
+        }
+    }
 }

@@ -8,22 +8,31 @@ public class JumpTrigger : MonoBehaviour
 {
     public float jumpForce = 15f;
     public Transform modelHolder;
-
+    public Transform bouncePoint;
     public float boucneInDuration = 0.25f;
     public Vector3 bounceIn;
     public float bounceOutDuration = 0.25f;
     public Vector3 bounceOut;
 
-    private void OnTriggerEnter(Collider other)
+    private bool isInternalCooldown = false;
+
+    private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player"))
         {
+
+            // if (other.transform.position.y < transform.position.y) return;
+
+            if (isInternalCooldown) return;
+            isInternalCooldown = true;
+
             PlayerController tmpPlayer = other.GetComponent<PlayerController>();
             tmpPlayer.ResetVelocity();
-
+            tmpPlayer.ForceMoveTo(new Vector3(tmpPlayer.transform.position.x, bouncePoint.position.y, tmpPlayer.transform.position.z), boucneInDuration / 2f);
             Bounce(() =>
             {
                 tmpPlayer.Jump(jumpForce);
+                DOVirtual.DelayedCall(0.2f, () => isInternalCooldown = false);
             });
 
         }
@@ -39,6 +48,7 @@ public class JumpTrigger : MonoBehaviour
     Sequence bounce;
     private void Bounce(Action onFinish)
     {
+
         bounce?.Kill();
         bounce = DOTween.Sequence().Append(modelHolder.DOScale(bounceIn, boucneInDuration)
                       .OnComplete(() =>

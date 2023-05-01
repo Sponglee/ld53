@@ -64,7 +64,10 @@ public class PlayerController : MonoBehaviour
         upPivot.Rotate(Vector3.forward, isLeft ? -rotationAmount : rotationAmount, Space.Self);
     }
 
-
+    public void Jump(float aForce)
+    {
+        _body.AddForce(upPivot.up * aForce, ForceMode.Impulse);
+    }
     public void ForceMoveTo(Transform targetPoint)
     {
         if (movementOverride) return;

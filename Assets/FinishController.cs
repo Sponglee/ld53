@@ -10,6 +10,7 @@ public class FinishController : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             other.gameObject.GetComponent<PlayerController>().ForceMoveTo(finishPoint);
+            CameraManager.Instance.SetLive("finishCam");
         }
     }
-} 
+}
